@@ -1,68 +1,34 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Card } from 'antd';
 import { CardProps } from 'antd/lib/card';
-import classNames from 'classnames';
 
 import styles from './index.less';
 
-type totalType = () => React.ReactNode;
-
-const renderTotal = (total?: number | totalType | React.ReactNode) => {
-  if (!total) {
-    return;
-  }
-  let totalDom;
-  switch (typeof total) {
-    case 'undefined':
-      totalDom = null;
-      break;
-    case 'function':
-      totalDom = <div className={styles.total}>{total()}</div>;
-      break;
-    default:
-      totalDom = <div className={styles.total}>{total}</div>
-  }
-  return totalDom;
-}
-
 export interface IChartCardProps extends CardProps {
-  title: React.ReactNode;
-  action?: React.ReactNode;
-  total?: React.ReactNode | number | (() => React.ReactNode | number);
-  footer?: React.ReactNode;
-  contentHeight?: number;
-  avatar?: React.ReactNode;
-  style?: React.CSSProperties;
+  title: string;
+  sub1: string;
+  sub2: string;
+  sub3: string;
+  icon: ReactNode;
+  total: number;
+  fault: number;
+  offline: number;
 }
 
 class DeviceCard extends React.Component<IChartCardProps> {
   renderContent = () => {
-    const { contentHeight, title, avatar, action, total, footer, children, loading } = this.props;
+    const { title, sub1, sub2, sub3, icon, total, fault, offline, loading } = this.props;
     if (loading) {
       return false;
     }
     return (
-      <div className={styles.chartCard}>
-        <div className={classNames(styles.chartTop, {[styles.chartTopMargin]: !children && !footer,})}>
-          <div className={styles.avatar}>{avatar}</div>
-          <div className={styles.metaWrap}>
-            <div className={styles.meta}>
-              <span className={styles.title}>{title}</span>
-              <span className={styles.action}>{action}</span>
-            </div>
-            {renderTotal(total)}
-          </div>
+      <div className={styles.deviceCard}>
+        <div className={styles.cardTop}>
+          <div className={styles.cardIcon}>{icon}</div>
+          <div className={styles.cardIcon}><span>{title}</span></div>
+          <div className={styles.cardIcon}><span className={styles.total}>{sub1}</span><span className={styles.cardTotal}>{total}</span></div>
+          <div className={styles.cardIcon}><span className={styles.total}>{sub2}</span><span className={styles.cardFault}>{fault}</span><span className={styles.cardDivier}>|</span><span className={styles.total}>{sub3}</span><span className={styles.cardOffline}>{offline}</span></div>
         </div>
-        {children && (
-          <div className={styles.content} style={{ height: contentHeight || 'auto' }}>
-            <div className={contentHeight && styles.contentFixed}>{children}</div>
-          </div>
-        )}
-        {footer && (
-          <div className={classNames(styles.footer, {[styles.footerMargin]: !children,})}>
-            {footer}
-          </div>
-        )}
       </div>
     );
   };
@@ -70,17 +36,18 @@ class DeviceCard extends React.Component<IChartCardProps> {
   render() {
     const {
       loading = false,
-      contentHeight,
+      icon,
       title,
-      avatar,
-      action,
+      sub1,
+      sub2,
+      sub3,
       total,
-      footer,
-      children,
+      fault,
+      offline,
       ...rest
     } = this.props;
     return (
-      <Card loading={loading} bodyStyle={{ padding: '20px 24px 8px 24px' }} {...rest}>
+      <Card loading={loading} bodyStyle={{ padding: '5px 10px' }} {...rest}>
         {this.renderContent()}
       </Card>
     );

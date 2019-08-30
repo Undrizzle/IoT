@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import PageLoading from '../../components/PageLoading';
 
 const DeviceRow = React.lazy(() => import('./DeviceRow'));
+const DeviceTab = React.lazy(() => import('./DeviceTab'));
 
 interface DashboardProps {
   loading: boolean;
@@ -26,6 +27,7 @@ class Dashboard extends Component<DashboardProps, DashboardState> {
         <React.Fragment>
           <Suspense fallback={<PageLoading />}>
             <DeviceRow loading={loading} />
+            <DeviceTab />
           </Suspense>
         </React.Fragment>
       </GridContent>

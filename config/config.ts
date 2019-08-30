@@ -115,10 +115,10 @@ export default {
               component: './Welcome',
             },
             {
-              name: '监测首页',
-              path: '/dashboard',
-              icon: 'dashboard',
-              component: './dashboard',
+              name: '终端管理',
+              path: '/termial',
+              icon: 'cluster',
+              component: './termial',
             },
             {
               name: 'event',

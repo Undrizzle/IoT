@@ -1,75 +1,36 @@
 @import '~antd/es/style/themes/default.less';
 
-.chartCard {
+.deviceCard {
   position: relative;
-  .chartTop {
+  .cardTop {
     position: relative;
     width: 100%;
     overflow: hidden;
-  }
-  .chartTopMargin {
-    margin-bottom: 12px;
-  }
-  .chartTopHasMargin {
-    margin-bottom: 20px;
-  }
-  .metaWrap {
-    float: left;
-  }
-  .avatar {
-    position: relative;
-    top: 4px;
-    float: left;
-    margin-right: 20px;
-    img {
-      border-radius: 100%;
+    .cardIcon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-  }
-  .meta {
-    height: 22px;
-    color: @text-color-secondary;
-    font-size: @font-size-base;
-    line-height: 22px;
-  }
-  .action {
-    position: absolute;
-    top: 4px;
-    right: 0;
-    line-height: 1;
-    cursor: pointer;
-  }
-  .total {
-    height: 38px;
-    margin-top: 4px;
-    margin-bottom: 0;
-    overflow: hidden;
-    color: @heading-color;
-    font-size: 30px;
-    line-height: 38px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    word-break: break-all;
-  }
-  .content {
-    position: relative;
-    width: 100%;
-    margin-bottom: 12px;
-  }
-  .contentFixed {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-  }
-  .footer {
-    margin-top: 8px;
-    padding-top: 9px;
-    border-top: 1px solid @border-color-split;
-    & > * {
-      position: relative;
+    .total {
+      font-size: 12px;
     }
-  }
-  .footerMargin {
-    margin-top: 20px;
+    .cardTotal {
+      padding-left: 5px;
+      color: @green-6;
+      font-size: 20px;
+    }
+    .cardFault {
+      padding-left: 5px;
+      color: @red-6;
+      font-size: 18px;
+    }
+    .cardOffline {
+      padding-left: 5px;
+      color: @yellow-6;
+      font-size: 18px;
+    }
+    .cardDivier {
+      padding: 0 5px;
+    }
   }
 }
