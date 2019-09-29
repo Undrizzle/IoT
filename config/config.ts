@@ -109,21 +109,16 @@ export default {
               redirect: '/welcome',
             },
             {
+              name: '欢迎',
               path: '/welcome',
-              name: 'welcome',
               icon: 'smile',
-              component: './Welcome',
+              component: './welcome',
             },
             {
               name: '终端管理',
               path: '/termial',
               icon: 'cluster',
               component: './termial',
-            },
-            {
-              name: 'event',
-              path: '/event',
-              component: './event',
             },
             {
               component: './404',

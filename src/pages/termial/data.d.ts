@@ -1,38 +1,32 @@
-export interface AdvancedOperation1 {
-  key: string;
-  type: string;
+export interface TableTermialItem {
+  key: number;
   name: string;
-  status: string;
-  updatedAt: string;
-  memo: string;
+  eui: string;
+  model: string;
+  place: string;
+  access: string;
+  status: number;
 }
 
-export interface AdvancedOperation2 {
-  key: string;
-  type: string;
+export interface TableTermialPagination {
+  total: number;
+  pageSize: number;
+  current: number;
+}
+
+export interface TableTermialDate {
+  list: TableTermialItem[];
+  pagination: Partial<TableTermialPagination>;
+}
+
+export interface TableTermialParams {
+  sorter: string;
+  status: string;
   name: string;
-  status: string;
-  updatedAt: string;
-  memo: string;
-}
-
-export interface AdvancedOperation3 {
-  key: string;
-  type: string;
-  name: string;
-  status: string;
-  updatedAt: string;
-  memo: string;
-}
-
-export interface IVisitData {
-  x: string;
-  y: number;
-}
-
-export interface AdvancedProfileData {
-  advancedOperation1: AdvancedOperation1[];
-  advancedOperation2: AdvancedOperation2[];
-  advancedOperation3: AdvancedOperation3[];
-  visitData: IVisitData[];
+  eui: string;
+  model: string;
+  place: string;
+  access: string;
+  pageSize: number;
+  currentPage: number;
 }

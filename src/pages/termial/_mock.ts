@@ -1,74 +1,168 @@
-const advancedOperation1 = [
-  {
-    key: 'op1',
-    type: '订购关系生效',
-    name: '曲丽丽',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-  {
-    key: 'op2',
-    type: '财务复审',
-    name: '付小小',
-    status: 'reject',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '不通过原因',
-  },
-  {
-    key: 'op3',
-    type: '部门初审',
-    name: '周毛毛',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-  {
-    key: 'op4',
-    type: '提交订单',
-    name: '林东东',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '很棒',
-  },
-  {
-    key: 'op5',
-    type: '创建订单',
-    name: '汗牙牙',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-];
+import { parse } from 'url';
+import { TableTermialItem, TableTermialParams } from './data.d';
 
-const advancedOperation2 = [
-  {
-    key: 'op1',
-    type: '订购关系生效',
-    name: '曲丽丽',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-];
+let tableTermialDataSource: TableTermialItem[] = [];
 
-const advancedOperation3 = [
-  {
-    key: 'op1',
-    type: '创建订单',
-    name: '汗牙牙',
-    status: 'agree',
-    updatedAt: '2017-10-03  19:23:12',
-    memo: '-',
-  },
-];
+for (let i = 0; i < 8; i += 1) {
+    tableTermialDataSource.push({
+      key: i,
+      name: `小天竺小区${i}`,
+      eui: `009569000000A46${i}`,
+      model: `R7262${i}_室外环境探测器`,
+      place: '华数滨江区LoRa网',
+      access: 'LoRa',
+      status: Math.floor(Math.random() * 10) % 3,
+    });
+  }
 
-const getProfileAdvancedData = {
-  advancedOperation1,
-  advancedOperation2,
-  advancedOperation3,
-};
+  function getRule(
+    req: { url: any },
+    res: {
+      json: (
+        arg0: {
+          list: TableTermialItem[];
+          pagination: { total: number; pageSize: number; current: number };
+        },
+      ) => void;
+    },
+    u: any,
+  ) {
+    let url = u;
+    if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+      // eslint-disable-next-line prefer-destructuring
+      url = req.url;
+    }
+  
+    const params = (parse(url, true).query as unknown) as TableTermialParams;
+  
+    let dataSource = tableTermialDataSource;
+  
+    if (params.sorter) {
+      const s = params.sorter.split('_');
+      dataSource = dataSource.sort((prev, next) => {
+        if (s[1] === 'descend') {
+          return next[s[0]] - prev[s[0]];
+        }
+        return prev[s[0]] - next[s[0]];
+      });
+    }
+  
+    if (params.status) {
+      const status = params.status.split(',');
+      let filterDataSource: TableTermialItem[] = [];
+      status.forEach((s: string) => {
+        filterDataSource = filterDataSource.concat(
+          dataSource.filter(item => {
+            if (parseInt(`${item.status}`, 10) === parseInt(s.split('')[0], 10)) {
+              return true;
+            }
+            return false;
+          }),
+        );
+      });
+      dataSource = filterDataSource;
+    }
+  
+    if (params.name) {
+      dataSource = dataSource.filter(data => data.name.indexOf(params.name) > -1);
+    }
 
-export default {
-  'GET  /api/profile/advanced': getProfileAdvancedData,
-};
+    if (params.eui) {
+      dataSource = dataSource.filter(data => data.eui.indexOf(params.eui) > -1);
+    }
+
+    if (params.model) {
+      dataSource = dataSource.filter(data => data.model.indexOf(params.model) > -1);
+    }
+
+    if (params.place) {
+      dataSource = dataSource.filter(data => data.place.indexOf(params.place) > -1);
+    }
+
+    if (params.access) {
+      dataSource = dataSource.filter(data => data.access.indexOf(params.access) > -1);
+    }
+  
+    let pageSize = 10;
+    if (params.pageSize) {
+      pageSize = parseInt(`${params.pageSize}`, 0);
+    }
+  
+    const result = {
+      list: dataSource,
+      pagination: {
+        total: dataSource.length,
+        pageSize,
+        current: parseInt(`${params.currentPage}`, 10) || 1,
+      },
+    };
+  
+    return res.json(result);
+  }
+
+  function postRule(
+    req: { url: any; body: any },
+    res: { json: (arg0: { list: TableTermialItem[]; pagination: { total: number } }) => void },
+    u: any,
+    b: { body: any },
+  ) {
+    let url = u;
+    if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+      // eslint-disable-next-line prefer-destructuring
+      url = req.url;
+    }
+  
+    const body = (b && b.body) || req.body;
+    const { method, name, desc, key } = body;
+  
+    switch (method) {
+      /* eslint no-case-declarations:0 */
+      case 'delete':
+        tableTermialDataSource = tableTermialDataSource.filter(item => key.indexOf(item.key) === -1);
+        break;
+      case 'post':
+        const i = Math.ceil(Math.random() * 10000);
+        tableTermialDataSource.unshift({
+          key: i,
+          href: 'https://ant.design',
+          avatar: [
+            'https://gw.alipayobjects.com/zos/rmsportal/eeHMaZBwmTvLdIwMfBpg.png',
+            'https://gw.alipayobjects.com/zos/rmsportal/udxAbMEhpwthVVcjLXik.png',
+          ][i % 2],
+          name: `TradeCode ${i}`,
+          title: `一个任务名称 ${i}`,
+          owner: '曲丽丽',
+          desc,
+          callNo: Math.floor(Math.random() * 1000),
+          status: Math.floor(Math.random() * 10) % 2,
+          updatedAt: new Date(),
+          createdAt: new Date(),
+          progress: Math.ceil(Math.random() * 100),
+        });
+        break;
+      case 'update':
+        tableTermialDataSource = tableTermialDataSource.map(item => {
+          if (item.key === key) {
+            return { ...item, desc, name };
+          }
+          return item;
+        });
+        break;
+      default:
+        break;
+    }
+  
+    const result = {
+      list: tableTermialDataSource,
+      pagination: {
+        total: tableTermialDataSource.length,
+      },
+    };
+  
+    return res.json(result);
+  }
+  
+  export default {
+    'GET /api/rule': getRule,
+    'POST /api/rule': postRule,
+  };

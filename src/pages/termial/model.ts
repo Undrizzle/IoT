@@ -1,50 +1,63 @@
 import { AnyAction, Reducer } from 'redux';
 
 import { EffectsCommandMap } from 'dva';
-import { AdvancedProfileData } from './data';
-import { queryAdvancedProfile } from './service';
+import { TableTermialDate } from './data';
+import { queryRule, removeRule } from './service';
+
+export interface StateType {
+  data: TableTermialDate;
+}
 
 export type Effect = (
   action: AnyAction,
-  effects: EffectsCommandMap & { select: <T>(func: (state: AdvancedProfileData) => T) => T },
+  effects: EffectsCommandMap & { select: <T>(func: (state: StateType) => T) => T },
 ) => void;
 
 export interface ModelType {
   namespace: string;
-  state: AdvancedProfileData;
+  state: StateType;
   effects: {
-    fetchAdvanced: Effect;
+    fetch: Effect;
+    remove: Effect;
   };
   reducers: {
-    show: Reducer<AdvancedProfileData>;
+    save: Reducer<StateType>;
   };
 }
 
 const Model: ModelType = {
-  namespace: 'dashboard',
+  namespace: 'termial',
 
   state: {
-    advancedOperation1: [],
-    advancedOperation2: [],
-    advancedOperation3: [],
+    data: {
+      list: [],
+      pagination: {},
+    },
   },
 
   effects: {
-    *fetchAdvanced(_, { call, put }) {
-      console.log('come dashboard fetch');
-      const response = yield call(queryAdvancedProfile);
+    *fetch({ payload }, { call, put }) {
+      const response = yield call(queryRule, payload);
       yield put({
-        type: 'show',
+        type: 'save',
         payload: response,
       });
+    },
+    *remove({ payload, callback }, { call, put }) {
+      const response = yield call(removeRule, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+      if (callback) callback();
     },
   },
 
   reducers: {
-    show(state, { payload }) {
+    save(state, action) {
       return {
         ...state,
-        ...payload,
+        data: action.payload,
       };
     },
   },
