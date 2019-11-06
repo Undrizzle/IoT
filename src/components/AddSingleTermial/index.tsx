@@ -46,6 +46,12 @@ class AddSingleTermial extends Component<AddSingleTermialProps, AddSingleTermial
     this.setState({ addSingleTermialCurrent: current });
   }
 
+  handleComplete = () => {
+    message.success('添加设备成功');
+    const { backTermial } = this.props;
+    backTermial();
+  }
+
   renderBasicParameters() {
     const { getFieldDecorator } = this.props.form;
 
@@ -904,10 +910,37 @@ class AddSingleTermial extends Component<AddSingleTermialProps, AddSingleTermial
             </Tabs>
           </TabPane>
           <TabPane tab="接收窗口配置" key="4">
-            Content of Tab Pane 4
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item label="RX1速率偏移" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                  <InputNumber min={0} max={3} defaultValue={0} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="RX1延迟时间" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                  <InputNumber min={5} max={15} defaultValue={5} />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Form.Item label="RX2速率DR" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                  <InputNumber min={0} max={5} defaultValue={0} />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="RX2频率" labelCol={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                  <InputNumber min={500.3} max={509.7} defaultValue={505.3} step={0.2} />
+                </Form.Item>
+              </Col>
+            </Row>
           </TabPane>
           <TabPane tab="虚拟网络配置" key="5">
-            Content of Tab Pane 5
+            <Form.Item label="虚拟网络ID" labelCol={{ span: 8 }} wrapperCol={{ span: 8 }}>
+              <Select showSearch style={{ width: '100%'}} placeholder="请选择要绑定的虚拟网络ID">
+                <Option value="none">无可选项</Option>
+              </Select>
+            </Form.Item>
           </TabPane>
         </Tabs>
       </div>
@@ -1031,7 +1064,6 @@ class AddSingleTermial extends Component<AddSingleTermialProps, AddSingleTermial
         </Steps>
         <div className="steps-content">{steps[addSingleTermialCurrent].content}</div>
         <div className={styles.stepsAction}>
-          <Col span={8} offset={8}>
           {addSingleTermialCurrent === 0 && (
             <Button type="primary" className={styles.stepsBtn} onClick={backTermial}>返回终端列表</Button>
           )}
@@ -1039,12 +1071,11 @@ class AddSingleTermial extends Component<AddSingleTermialProps, AddSingleTermial
             <Button type="primary" className={styles.stepsBtn} onClick={() => this.next()}>下一步</Button>
           )}
           {addSingleTermialCurrent === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')}>完成</Button>
+            <Button type="primary" onClick={this.handleComplete}>完成</Button>
           )}
           {addSingleTermialCurrent > 0 && (
             <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>上一步</Button>
           )}
-          </Col>
         </div>
         <Modal 
           title="请在地图上选择终端部署的地理位置"
